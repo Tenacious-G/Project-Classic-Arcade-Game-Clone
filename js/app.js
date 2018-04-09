@@ -2,14 +2,29 @@
 //ES6 class
 class Enemy{
 	//this.sprite = 'images/enemy-bug.png';
-	constructor(sprite  = 'images/enemy-bug.png'){ //properties
+	constructor(sprite  = 'images/enemy-bug.png', x= 500, y = 300, speed = 10){ //properties
 	this.sprite = sprite;
+	
 	// Setting the Enemy initial location (you need to implement)
 	// Setting the Enemy speed (you need to implement)
+	// xCo-ord
+	// let x= 500;
+	this.x = x;
+	// yCo-ord
+	// let y = 300;
+	this.y = y;
+	// speed
+	// let speed = 10;
+	this.speed = speed;
 	}
 	// methods
-	update(dt){}
-	render(){}
+	update(dt){
+		    let newX = this.x * dt * this.speed;
+    this.x = newX;
+	}
+	render(){
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+	}
 }
 							// var Enemy = function() {
 								// // Variables applied to each of our instances go here,
@@ -29,10 +44,10 @@ enem = new Enemy();
 								// // all computers.
 							// };
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+							// // Draw the enemy on the screen, required method for game
+							// Enemy.prototype.render = function() {
+								// ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+							// };
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -46,7 +61,7 @@ class Player {
 	}
 	// methods
 	handleInput(){
-		//do something!
+		//move the player depending on which key gets pressed
 	}
 		update(dt){}
 	render(){}
