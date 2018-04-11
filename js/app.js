@@ -2,7 +2,7 @@
 //ES6 class
 class Enemy{
 	//this.sprite = 'images/enemy-bug.png';
-	constructor(sprite  = 'images/enemy-bug.png', x= 500, y = 300, speed = 10){ //properties
+	constructor(sprite  = 'images/enemy-bug.png', x= 100, y = 400, speed = 1000){ //properties
 	this.sprite = sprite;
 	
 	// Setting the Enemy initial location (you need to implement)
@@ -19,11 +19,17 @@ class Enemy{
 	}
 	// methods
 	update(dt){
-		    let newX = this.x * dt * this.speed;
-    this.x = newX;
+		if (this.x < 600){
+		this.x = this.x + Math.round((dt * this.speed)/10);
+    //this.x = newX;
+	// alert("x, y is currently..."+ ".."+ this.x + ".." + this.y);
+		}else{//place bug back to left side of screen
+			this.x = 0;
+		}
 	}
 	render(){
-		ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+		
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 	}
 }
 							// var Enemy = function() {
@@ -34,7 +40,7 @@ class Enemy{
 								// // a helper we've provided to easily load images
 								// this.sprite = 'images/enemy-bug.png';
 							// };
-enem = new Enemy();
+
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -87,8 +93,17 @@ player = new Player();
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+enem = new Enemy();
+slowEnemy = new Enemy();
+mediumEnemy = new Enemy();
+fastEnemy = new Enemy();
+
 const allEnemies = [];
 allEnemies.push(enem);
+allEnemies.push(slowEnemy);
+allEnemies.push(mediumEnemy);
+allEnemies.push(fastEnemy);
+//allEnemies.push(enem);
 
 
 // This listens for key presses and sends the keys to your
