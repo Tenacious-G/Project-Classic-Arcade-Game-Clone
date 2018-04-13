@@ -1,37 +1,35 @@
-// Enemies our player must avoid
-//ES6 class
+const preset = {
+	Ytop: 60,
+	Ymiddle: 145,
+	Ybottom: 230,
+	Ypos: [60,145,230],
+}
+
 class Enemy{
-	//this.sprite = 'images/enemy-bug.png';
-	constructor(sprite  = 'images/enemy-bug.png', x= 100, y = 400, speed = 1000){ //properties
+	constructor(sprite  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
+	//properties
 	this.sprite = sprite;
-	
-	// Setting the Enemy initial location (you need to implement)
-	// Setting the Enemy speed (you need to implement)
-	// xCo-ord
-	// let x= 500;
 	this.x = x;
-	// yCo-ord
-	// let y = 300;
 	this.y = y;
-	// speed
-	// let speed = 10;
-	this.speed = speed;
+	this.speed = speed;		
 	}
-	// methods
-	update(dt){
-		if (this.x < 600){
-		this.x = this.x + Math.round((dt * this.speed)/10);
-    //this.x = newX;
-	// alert("x, y is currently..."+ ".."+ this.x + ".." + this.y);
-		}else{//place bug back to left side of screen
-			this.x = 0;
+		update(dt){
+			if (this.x < 600){
+			this.x = this.x + Math.round((dt * this.speed)/10);
+			// alert("x, y is currently..."+ ".."+ this.x + ".." + this.y);
+			}else{//place bug back to left side of screen
+				this.x = 0;
+				}
+		}
+		render(){
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 		}
 	}
-	render(){
-		
-		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-	}
-}
+
+// Enemies our player must avoid
+//ES6 class
+
+
 							// var Enemy = function() {
 								// // Variables applied to each of our instances go here,
 								// // we've provided one for you to get started
@@ -75,36 +73,33 @@ class Player {
 	
 }
 player = new Player();
-// class Dessert {
-  // constructor(calories = 250) {
-    // this.calories = calories;
-  // }
-// }
-// class IceCream extends Dessert {
-  // constructor(flavor, calories, toppings = []) {
-    // super(calories);
-    // this.flavor = flavor;
-    // this.toppings = toppings;
-  // }
-  // addTopping(topping) {
-    // this.toppings.push(topping);
-  // }
-// }
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 enem = new Enemy();
-slowEnemy = new Enemy();
-mediumEnemy = new Enemy();
-fastEnemy = new Enemy();
+let sprite  = 'images/enemy-bug.png';
+let x = 100;
+let arrayIndex = getRandomInt(0,3);
+//return a whole number between "min" and "max minus one" //MDN 
+function getRandomInt(min, max){
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random()*(max-min))+min;
+}
+//alert("getRandomInt is "+ getRandomInt(0,3));
 
-const allEnemies = [];
-allEnemies.push(enem);
+let yFast = preset.Ypos[getRandomInt(0,3)];
+let yMedium = preset.Ypos[getRandomInt(0,3)];
+let speed = 1000;
+slowEnemy = new Enemy(sprite, x= 100, preset.Ypos[arrayIndex], speed = 800);
+mediumEnemy = new Enemy(sprite, x= 200, yMedium, speed = 1000);
+fastEnemy = new Enemy(sprite, x= 300, yFast, speed = 3000);
+let allEnemies = [];
 allEnemies.push(slowEnemy);
 allEnemies.push(mediumEnemy);
-allEnemies.push(fastEnemy);
-//allEnemies.push(enem);
 
+allEnemies.push(fastEnemy);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
