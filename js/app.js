@@ -9,13 +9,43 @@ const preset = {
 
 let allEnemies = [];
 let enemyImage  = 'images/enemy-bug.png'; //leaving "enemyImage" outside preset array for readability
-let x = 100; //horizontal co-ordinate of sprites
+let playerImage  = 'images/char-boy.png'; //may offer player chance to change his/her sprite in future
+let x = 300; //horizontal co-ordinate of sprites
+let y = 300; //vertical co-ordinate of sprites
+let speed = 800; 
+
+//sprites are enemies and the player
+class Sprite{
+		//The image for our sprites uses a helper to quickly load images
+	constructor(spriteImage  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
+	//properties
+	this.spriteImage = spriteImage;
+	this.x = x;
+	this.y = y;
+	this.speed = speed;		
+	}
+	//multiply any movement by the dt parameter	which will ensure the game runs at the same speed for all computers.
+	//Parameter: dt, a time delta between ticks
+	update(dt){
+	if (this.x < 600){
+		this.x = this.x + Math.round((dt * this.speed)/10);
+		}
+	else{//return enemy to left side of screen
+		this.x = 0;
+		}
+	}
+	//Draw the enemy on the screen
+	render(){
+		ctx.drawImage(Resources.get(this.spriteImage), this.x, this.y);
+	}
+}
 
 // Enemies our player must avoid
-class Enemy{
+class Enemy extends Sprite{
 	//The image for our enemies uses a helper to quickly load images
 	constructor(enemyImage  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
 	//properties
+	super(enemyImage, x, y, speed);//must call super constructor  -call the parent class "Sprite"
 	this.enemyImage = enemyImage;
 	this.x = x;
 	this.y = y;
@@ -41,15 +71,40 @@ class Enemy{
 // This class requires an update(), render() and
 // a handleInput() method.
 
-class Player {
+class Player extends Sprite{
 	constructor(){ //properties
+	super(playerImage, x=200, y=325, speed);//must call super constructor  -call the parent class "Sprite"
+	this.playerImage = playerImage;
+	this.x = x;
+	this.y = y;
+	this.speed = speed;	
 	}
 	// methods
-	handleInput(){
-		//move the player depending on which key gets pressed
+	handleInput(keypress){
+	//move the player depending on which key gets pressed
+	//alert("key pressed was " + e);
+	switch (keypress){
+	case 'left': this.x -= 103; //alert('move left one block');
+		break;
+	case 'up': this.y -= 84; //alert('move up one block');
+		break;
+	case 'right': this.x += 103; //alert('move right one block');
+		break;
+	case 'down': this.y += 84; //alert('move down one block');
+		break;
+	default:
 	}
-		update(dt){}
-	render(){}	
+	}
+	update(dt){
+		//set player's initial position
+		//this.x = 300;
+		//this.y = 315;
+	//move player using arrow keys
+	
+	}
+	render(){
+		ctx.drawImage(Resources.get(this.playerImage), this.x, this.y);
+	}	
 }
 
 // Now instantiate your objects.
