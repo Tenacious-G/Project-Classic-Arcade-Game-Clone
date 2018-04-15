@@ -1,7 +1,4 @@
 const preset = {
-	// Ytop: 60,
-	// Ymiddle: 145,
-	// Ybottom: 230,
 	Xpos: [0,40,70,100,140,180],
 	Ypos: [60,145,230], //top, middle or bottom paved lane
 	speeds: [800,1000,2000],
@@ -14,7 +11,7 @@ let x = 300; //horizontal co-ordinate of sprites
 let y = 300; //vertical co-ordinate of sprites
 let speed = 800; 
 
-//sprites are enemies and the player
+//sprites are images of the enemies and the player
 class Sprite{
 		//The image for our sprites uses a helper to quickly load images
 	constructor(spriteImage  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
@@ -82,25 +79,28 @@ class Player extends Sprite{
 	// methods
 	handleInput(keypress){
 	//move the player depending on which key gets pressed
-	//alert("key pressed was " + e);
+	//if statements prevent moving the player off screen
 	switch (keypress){
-	case 'left': this.x -= 103; //alert('move left one block');
+	case 'left': if(this.x > 0){this.x -= 103}; //alert('move left one block');
 		break;
 	case 'up': this.y -= 84; //alert('move up one block');
+	//alert("player co-ords are " + player.x + ", " + player.y);
 		break;
-	case 'right': this.x += 103; //alert('move right one block');
+	case 'right': if(this.x < 400){this.x += 103;} //alert('move right one block');
 		break;
-	case 'down': this.y += 84; //alert('move down one block');
+	case 'down': if(this.y < 400){this.y += 84;} //alert('move down one block');
 		break;
 	default:
 	}
 	}
-	update(dt){
-		//set player's initial position
-		//this.x = 300;
-		//this.y = 315;
-	//move player using arrow keys
-	
+	update(dt){ //engine calls update(dt) for allEnemies, calls update() for player
+		//player reaches the water
+		if (this.y < 0){
+			//player has reached water, please move player to starting position
+			//set player's initial position
+			this.x = 200;
+			this.y = 325;
+		}
 	}
 	render(){
 		ctx.drawImage(Resources.get(this.playerImage), this.x, this.y);
@@ -111,10 +111,15 @@ class Player extends Sprite{
 
 // Place the player object in a variable called player
 player = new Player();
+
+//place player in starting position
+//use after collisions and when player reaches the water
+// function resetPlayer(){
+	// player(sprite,x=200, y=325,speed);
+// }
+
 // Place all enemy objects in an array called allEnemies
 
-
-//let arrayIndex = getRandomInt(0,3);
 //return a whole number between "min" and "max minus one" //MDN 
 function getRandomInt(min, max){
 	min = Math.ceil(min);
