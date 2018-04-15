@@ -1,6 +1,6 @@
 const preset = {
 	Xpos: [0,40,70,100,140,180],
-	Ypos: [60,145,230], //top, middle or bottom paved lane
+	Ypos: [73,157,241], //top, middle or bottom paved lane //was 60,145,230
 	speeds: [800,1000,2000],
 }
 
@@ -10,10 +10,12 @@ let playerImage  = 'images/char-boy.png'; //may offer player chance to change hi
 let x = 300; //horizontal co-ordinate of sprites
 let y = 300; //vertical co-ordinate of sprites
 let speed = 800; 
+let blighters;
+let distanceApart = 0;
 
 //sprites are images of the enemies and the player
 class Sprite{
-		//The image for our sprites uses a helper to quickly load images
+	//The image for our sprites uses a helper to quickly load images
 	constructor(spriteImage  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
 	//properties
 	this.spriteImage = spriteImage;
@@ -101,6 +103,26 @@ class Player extends Sprite{
 			this.x = 200;
 			this.y = 325;
 		}
+	//check for collisions
+	//move the player back to the starting position if a collision occurs
+	//all sprites have a (x,y) co-ordinate. Using trigonometry, can find out the distance between a player and all enemies at any given time
+	//distance squared is (difference in x-co-ordinates) squared + (difference in y-co-ordinates) squared
+	//player has to be in same lane as enemy for collision to take place
+	for(let index=0;index<allEnemies.length;index++){
+	//for(blighters in allEnemies){
+		let enemyX = allEnemies[index].x;
+		//alert(allEnemies[index].x);
+		let enemyY  = allEnemies[index].y;
+		let playerX = this.x;
+		let playerY = this.y;
+		distanceApart = Math.sqrt((enemyX - playerX)*(enemyX - playerX)+(enemyY - playerY)*(enemyY - playerY));
+		//if close and in same lane
+		if ((distanceApart<100)&&(enemyY === playerY)){
+			//collision has taken place
+			this.x = 200;
+			this.y = 325;
+		}
+	}
 	}
 	render(){
 		ctx.drawImage(Resources.get(this.playerImage), this.x, this.y);
@@ -127,10 +149,10 @@ function getRandomInt(min, max){
 	return Math.floor(Math.random()*(max-min))+min;
 }
 
-let playerStatus = 7; //will start with playerStatus as "1"
+let playerStatus = 5; //will start with playerStatus as "1"
 //speed up the game the longer it goes on for
 //TODO: will develop this further after creating the player's movements
-let accelerator = 3;
+let accelerator = 1;
 
 //the higher the player's ability, the more enemies are created
 for(let ind=0;ind<playerStatus;ind++)
