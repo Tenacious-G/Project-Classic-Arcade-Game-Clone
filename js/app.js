@@ -2,6 +2,7 @@ const preset = {
 	Xpos: [0,40,70,100,140,180],
 	Ypos: [73,157,241], //top, middle or bottom paved lane //was 60,145,230
 	speeds: [800,1000,2000],
+	score: 0,
 }
 
 let allEnemies = [];
@@ -12,6 +13,8 @@ let y = 300; //vertical co-ordinate of sprites
 let speed = 800; 
 let blighters;
 let distanceApart = 0;
+
+const tally = document.querySelector('.score');
 
 //sprites are images of the enemies and the player
 class Sprite{
@@ -52,23 +55,19 @@ class Enemy extends Sprite{
 	}
 	//multiply any movement by the dt parameter	which will ensure the game runs at the same speed for all computers.
 	//Parameter: dt, a time delta between ticks
-		update(dt){
-		if (this.x < 600){
-			this.x = this.x + Math.round((dt * this.speed)/10);
-			}
-		else{//return enemy to left side of screen
-			this.x = 0;
-			}
+	update(dt){
+	if (this.x < 600){
+		this.x = this.x + Math.round((dt * this.speed)/10);
 		}
-		//Draw the enemy on the screen
-		render(){
-			ctx.drawImage(Resources.get(this.enemyImage), this.x, this.y);
+	else{//return enemy to left side of screen
+		this.x = 0;
 		}
 	}
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+	//Draw the enemy on the screen
+	render(){
+		ctx.drawImage(Resources.get(this.enemyImage), this.x, this.y);
+	}
+}
 
 class Player extends Sprite{
 	constructor(){ //properties
@@ -98,20 +97,23 @@ class Player extends Sprite{
 	update(dt){ //engine calls update(dt) for allEnemies, calls update() for player
 		//player reaches the water
 		if (this.y < 0){
-			//player has reached water, please move player to starting position
-			//set player's initial position
-			this.x = 200;
-			this.y = 325;
+			//reset player's initial position
+			resetPlayer(x,y);
+			//increase score
+			preset.score++;
+			//display latest score
+			tally.innerHTML = 'Score : ' + preset.score;
+			
 		}
 	//check for collisions
 	//move the player back to the starting position if a collision occurs
 	//all sprites have a (x,y) co-ordinate. Using trigonometry, can find out the distance between a player and all enemies at any given time
 	//distance squared is (difference in x-co-ordinates) squared + (difference in y-co-ordinates) squared
 	//player has to be in same lane as enemy for collision to take place
+	//collisionCheck(x,y);
 	for(let index=0;index<allEnemies.length;index++){
 	//for(blighters in allEnemies){
 		let enemyX = allEnemies[index].x;
-		//alert(allEnemies[index].x);
 		let enemyY  = allEnemies[index].y;
 		let playerX = this.x;
 		let playerY = this.y;
@@ -119,8 +121,7 @@ class Player extends Sprite{
 		//if close and in same lane
 		if ((distanceApart<100)&&(enemyY === playerY)){
 			//collision has taken place
-			this.x = 200;
-			this.y = 325;
+			resetPlayer(x,y);
 		}
 	}
 	}
@@ -134,11 +135,12 @@ class Player extends Sprite{
 // Place the player object in a variable called player
 player = new Player();
 
-//place player in starting position
-//use after collisions and when player reaches the water
-// function resetPlayer(){
-	// player(sprite,x=200, y=325,speed);
-// }
+// place player in starting position
+// use after collisions and when player reaches the water
+function resetPlayer(x,y){
+	player.x = 200;
+	player.y = 325;
+}
 
 // Place all enemy objects in an array called allEnemies
 
