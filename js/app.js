@@ -1,6 +1,6 @@
 const preset = {
 	Xpos: [0,40,70,100,140,180],
-	Ypos: [73,157,241], //top, middle or bottom paved lane //was 60,145,230
+	Ypos: [73,157,241], //top, middle or bottom paved lane
 	speeds: [800,1000,2000],
 	score: 0,
 	leftHandSide: 0,
@@ -16,14 +16,19 @@ let enemyImage  = 'images/enemy-bug.png'; //leaving "enemyImage" outside preset 
 let playerImage  = 'images/char-boy.png'; //may offer player chance to change his/her sprite in future
 let x = 300; //horizontal co-ordinate of sprites
 let y = 300; //vertical co-ordinate of sprites
-let speed = 800; 
-let blighters;
-let distanceApart = 0;
-let accelerator = 1;
+let speed = 800; //enemy speed across screen
+let distanceApart = 0; //distance between the player and an enemy
+let accelerator = 1; //factor which could be used to alter enemy speeds
 
 const tally = document.querySelector('.score');
 
-//sprites are images of the enemies and the player
+/**
+*@constructor sprites are images of the enemies and the player
+*@parameter spriteImage
+*@parameter x, y Co-ordinates
+*@parameter speed
+*@returns moves sprites around screen, calls on engine.js to render the sprites
+*/
 class Sprite{
 	//The image for our sprites uses a helper to quickly load images
 	constructor(spriteImage  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
@@ -49,7 +54,13 @@ class Sprite{
 	}
 }
 
-// Enemies our player must avoid
+/**
+*@constructor Enemies our player must avoid
+*@parameter enemyImage
+*@parameter x, y Co-ordinates
+*@parameter speed
+*@returns moves enemies across screen, calls on engine.js to render the enemies
+*/
 class Enemy extends Sprite{
 	//The image for our enemies uses a helper to quickly load images
 	constructor(enemyImage  = 'images/enemy-bug.png', x= 100, y=preset.Ypos[0], speed = 1000){
@@ -76,6 +87,13 @@ class Enemy extends Sprite{
 	}
 }
 
+/**
+*@constructor move the player around the screen
+*@parameter playerImage
+*@parameter x, y Co-ordinates
+*@parameter speed
+*@returns calls on engine.js to render the player image. updates the score, calls for a modal on game completion
+*/
 class Player extends Sprite{
 	constructor(){ //properties
 	super(playerImage, x=200, y=325, speed);//must call super constructor  -call the parent class "Sprite"
@@ -123,7 +141,6 @@ class Player extends Sprite{
 	//player has to be in same lane as enemy for collision to take place
 	//collisionCheck(x,y);
 		for(let index=0;index<allEnemies.length;index++){
-		//for(blighters in allEnemies){
 			let enemyX = allEnemies[index].x;
 			let enemyY  = allEnemies[index].y;
 			let playerX = this.x;
@@ -144,18 +161,26 @@ class Player extends Sprite{
 // Place the player object in a variable called player
 player = new Player();
 
-// place player in starting position
-// use after collisions and when player reaches the water
+/**
+*@description place player in starting position, use after collisions and when player reaches the water
+*@parameters x, y Co-ordinates
+*/
 function resetPlayer(x,y){
 	player.x = preset.startPositionX;
 	player.y = preset.startPositionY;
 }
 
-//add two enemies on screen to start game
+//place two enemies onto screen at start of game
 addEnemies();
 addEnemies();
 
-// Place all enemy objects in an array called allEnemies
+/**
+*@description Place all enemy objects in an array called allEnemies
+*@parameter preset.Xpos random x-co-ordinates
+*@parameter preset.Ypos randomly selects top, middle or bottom paved lane
+*@parameter speeds randomly selects one of three speeds
+*@parameter accelerator could be used to speed up/slow down enemies
+*/
 function addEnemies(){
 	//create new enemy with random positions and speeds
 	let newEnemy = new Enemy(enemyImage, preset.Xpos[getRandomInt(0,5)], preset.Ypos[getRandomInt(0,3)], preset.speeds[getRandomInt(0,3)]*accelerator);
@@ -163,8 +188,11 @@ function addEnemies(){
 	allEnemies.push(newEnemy);
 }
 
-
-//return a whole number between "min" and "max minus one" //MDN 
+/**
+*@description generate a random integer, adapted from Math.random() on MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+*@parameter min, max
+*@returns a whole number between "min" and "max minus one"
+*/
 function getRandomInt(min, max){
 	min = Math.ceil(min);
 	max = Math.floor(max);
@@ -184,7 +212,10 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-//When the user completes the game, open the modal
+/**
+*@description When the user completes the game, open the modal
+*@returns restarts the game or returns to previous webpage
+*/
 function openModal(){
 	if (confirm("You won, well done!\nWould you like to play again?")){
 		//player wants to restart the game
