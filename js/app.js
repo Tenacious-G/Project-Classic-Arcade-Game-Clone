@@ -23,9 +23,6 @@ let accelerator = 1;
 
 const tally = document.querySelector('.score');
 
-
-
-
 //sprites are images of the enemies and the player
 class Sprite{
 	//The image for our sprites uses a helper to quickly load images
@@ -112,6 +109,11 @@ class Player extends Sprite{
 			preset.score++;
 			//display latest score
 			tally.innerHTML = 'Get to five to win! Your score: ' + preset.score;
+			//has player won game?
+			if (preset.score === 5){ 
+				
+				openModal();
+			}
 			addEnemies();
 		}
 	//check for collisions
@@ -181,3 +183,14 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+//When the user completes the game, open the modal
+function openModal(){
+	if (confirm("You won, well done!\nWould you like to play again?")){
+		//player wants to restart the game
+		window.location.reload();
+	}else
+		//player wants to leave the game, load the previous webpage
+		history.go(-1);
+}
+
