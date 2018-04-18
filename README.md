@@ -5,6 +5,8 @@ Classic Arcade Game Clone
 
 ## Project 4 for the Google Udacity FrontEnd Nanodegree course.
 
+https://tenacious-g.github.io/Project-Classic-Arcade-Game-Clone/
+
 ##### How to run:
 
 This game requires the following files:-
